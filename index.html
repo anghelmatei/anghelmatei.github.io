@@ -102,6 +102,8 @@
             mix-blend-mode: difference;
             z-index: 9999;
             transform: translate(-50%, -50%);
+            opacity: 0;
+            /* Hidden by default until moved */
             transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1),
                 height 0.3s cubic-bezier(0.19, 1, 0.22, 1),
                 opacity 0.3s;
@@ -369,24 +371,82 @@
             transform: translateY(-3px);
         }
 
-        /* Status badge */
-        .status-badge {
-            display: inline-flex;
+        /* Scroll indicator */
+        .hero-scroll {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 9999px;
-            font-size: 0.875rem;
+            gap: 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: rgba(156, 163, 175, 1);
+            opacity: 0;
+            animation: fadeUp 1s ease 1.2s forwards;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
+        /* Responsive positioning for small screens */
+        @media (max-width: 640px) {
+            .hero-scroll {
+                bottom: 100px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .hero-scroll {
+                bottom: 60px;
+            }
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(156, 163, 175, 1), transparent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scroll-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: #ffffff;
+            animation: scrollDown 1.5s ease-in-out infinite;
+        }
+
+        @keyframes scrollDown {
+            0% {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
         }
     </style>
 </head>
@@ -444,11 +504,7 @@
             <div class="hero-shape hero-shape-3"></div>
 
             <div class="space-y-6 relative z-10">
-                <!-- Status Badge -->
-                <div class="status-badge font-mono text-gray-400 reveal">
-                    <span class="status-dot"></span>
-                    <span>Currently finishing thesis on distributed systems</span>
-                </div>
+
 
                 <p class="font-mono text-gray-500 text-sm reveal">01 — Introduction</p>
                 <h1 class="text-5xl md:text-8xl font-serif leading-[1.1] reveal delay-100">
@@ -476,6 +532,12 @@
                         View Resume
                     </a>
                 </div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="hero-scroll">
+                <div class="scroll-line"></div>
+                Scroll
             </div>
         </section>
 
@@ -942,9 +1004,20 @@
         const gradient = document.getElementById('cursor-gradient');
         const triggers = document.querySelectorAll('.hover-trigger, a, button');
 
-        // Only run custom cursor logic if device supports hover (desktop)
-        if (window.matchMedia("(hover: hover)").matches) {
-            document.addEventListener('mousemove', (e) => {
+        // Only run custom cursor logic if device implies hover, but don't strictly gate listener
+        // to avoid initialization race conditions. CSS handles strict hiding.
+
+        let cursorVisible = false;
+        let isCursorMoving = false;
+
+        document.addEventListener('mousemove', (e) => {
+            if (!cursorVisible) {
+                cursorVisible = true;
+                cursor.style.opacity = '1';
+            }
+
+            if (!isCursorMoving) {
+                isCursorMoving = true;
                 requestAnimationFrame(() => {
                     const x = e.clientX;
                     const y = e.clientY;
@@ -952,14 +1025,21 @@
                     cursor.style.top = y + 'px';
                     gradient.style.setProperty('--x', x + 'px');
                     gradient.style.setProperty('--y', y + 'px');
+                    isCursorMoving = false;
                 });
-            });
+            }
+        });
 
-            triggers.forEach(trigger => {
-                trigger.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-                trigger.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-            });
-        }
+        // Hide cursor when leaving window
+        document.addEventListener('mouseleave', () => {
+            cursorVisible = false;
+            cursor.style.opacity = '0';
+        });
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            trigger.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
 
         // --- 2. Mobile Menu Logic ---
         const openMenuBtn = document.getElementById('open-menu');

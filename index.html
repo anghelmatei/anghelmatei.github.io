@@ -20,7 +20,7 @@
 
     <script>
         tailwind.config = {
-            darkMode: ['class', '[data-theme="dark"]'],
+            darkMode: ['class', '[data-theme="dark"]', '[data-theme="neutral"]'],
             theme: {
                 extend: {
                     colors: {
@@ -592,6 +592,18 @@
                 transform: translate(-50%, 0);
             }
         }
+
+        /* Explicit GitHub Chart Theme Logic */
+        [data-theme="dark"] .gh-chart {
+            filter: invert(1) hue-rotate(180deg);
+            mix-blend-mode: screen;
+        }
+
+        [data-theme="neutral"] .gh-chart {
+            filter: invert(1) hue-rotate(180deg) brightness(1.5) saturate(1.2);
+            mix-blend-mode: screen;
+            opacity: 0.9;
+        }
     </style>
 </head>
 
@@ -937,6 +949,27 @@
                         </p>
                     </div>
 
+                </div>
+            </div>
+        </section>
+
+        <!-- GitHub Stats Section -->
+        <section id="github-stats" class="py-24 md:py-32 px-6 md:px-24 max-w-7xl mx-auto border-t border-main">
+            <div class="grid md:grid-cols-12 gap-12">
+                <div class="md:col-span-4 md:sticky md:top-32 h-fit">
+                    <span class="font-mono text-subtle text-sm block mb-4">03b — Open Source</span>
+                    <h2 class="text-3xl font-serif italic">Contributions</h2>
+                </div>
+                <div class="md:col-span-8 relative reveal">
+                    <div class="w-full overflow-x-auto rounded-xl border border-main bg-card p-4 md:p-8">
+                        <!-- Added specific class 'gh-chart' for manual targeting -->
+                        <img src="https://ghchart.rshah.org/409ba5/anghelmatei" alt="Matei's GitHub Contributions"
+                            class="gh-chart w-full h-auto block transition-all duration-500 min-w-[600px]" />
+                    </div>
+                    <p class="font-mono text-xs text-subtle mt-4 text-right">
+                        Data from <a href="https://github.com/anghelmatei" target="_blank"
+                            class="text-main hover:underline">@anghelmatei</a>
+                    </p>
                 </div>
             </div>
         </section>
@@ -1297,52 +1330,58 @@
 
 
         // --- 4. Interactive Timeline Line ---
-        const timelineContainer = document.querySelector('.timeline-container');
-        const timelineLine = document.getElementById('timeline-line');
-        const timelineDots = document.querySelectorAll('.timeline-dot');
+        const timelineContainers = document.querySelectorAll('.timeline-container');
 
         function updateTimeline() {
-            if (!timelineContainer) return;
+            if (!timelineContainers.length) return;
 
-            const rect = timelineContainer.getBoundingClientRect();
             const windowHeight = window.innerHeight;
-
-            // Start drawing when the top of container hits middle of screen
             const startOffset = windowHeight / 2;
 
-            if (rect.top < startOffset) {
-                // Calculate how much we've scrolled past the start point
-                const scrolled = startOffset - rect.top;
-                // Calculate total height available to scroll
-                const totalHeight = rect.height;
+            timelineContainers.forEach(container => {
+                const line = container.querySelector('.timeline-line');
+                const dots = container.querySelectorAll('.timeline-dot');
+                if (!line) return;
 
-                // Convert to percentage (max 100%)
-                let percentage = (scrolled / totalHeight) * 100;
-                percentage = Math.min(Math.max(percentage, 0), 100);
+                const rect = container.getBoundingClientRect();
 
-                timelineLine.style.height = `${percentage}%`;
+                if (rect.top < startOffset) {
+                    // Calculate how much we've scrolled past the start point
+                    const scrolled = startOffset - rect.top;
+                    // Calculate total height available to scroll
+                    const totalHeight = rect.height;
 
-                // Calculate the current height of the line in pixels
-                const lineHeight = (percentage / 100) * totalHeight;
+                    // Convert to percentage (max 100%)
+                    let percentage = (scrolled / totalHeight) * 100;
+                    percentage = Math.min(Math.max(percentage, 0), 100);
 
-                // Check each dot to see if the line has reached it
-                timelineDots.forEach(dot => {
-                    const dotItem = dot.parentElement;
-                    const dotOffsetTop = dotItem.offsetTop;
-                    // Add a small offset to account for the dot's transform
-                    const dotCenter = dotOffsetTop + 8; // 8px accounts for the 0.4em transform
+                    line.style.height = `${percentage}%`;
 
-                    if (lineHeight >= dotCenter) {
-                        dot.classList.add('active');
-                    } else {
-                        dot.classList.remove('active');
-                    }
-                });
-            } else {
-                timelineLine.style.height = '0%';
-                // Remove active class from all dots when scrolled above timeline
-                timelineDots.forEach(dot => dot.classList.remove('active'));
-            }
+                    // Calculate the current height of the line in pixels
+                    const lineHeightPx = (percentage / 100) * totalHeight;
+
+                    // Check each dot
+                    dots.forEach(dot => {
+                        const dotItem = dot.parentElement;
+                        // Determine dot position relative to container top
+                        // offsetTop is relative to the offsetParent (which should be the relative container or item)
+                        // If .timeline-item is relative, dot.offsetTop is 0 or small. 
+                        // We need dotItem.offsetTop (position of item in container).
+                        // Let's verify structure: .timeline-container > .timeline-item > .timeline-dot
+
+                        const dotCenter = dotItem.offsetTop + 8; // approx center
+
+                        if (lineHeightPx >= dotCenter) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                } else {
+                    line.style.height = '0%';
+                    dots.forEach(dot => dot.classList.remove('active'));
+                }
+            });
         }
 
 
@@ -1402,6 +1441,13 @@
         // Initial set
         applyTheme(themeState);
 
+        // System preference listener
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (localStorage.getItem('theme') === 'system') {
+                applyTheme('system');
+            }
+        });
+
         themeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const value = btn.getAttribute('data-value');
@@ -1412,13 +1458,16 @@
 
         function applyTheme(theme) {
             const html = document.documentElement;
+            let effectiveTheme = theme;
+
             if (theme === 'system') {
-                html.removeAttribute('data-theme');
-            } else {
-                html.setAttribute('data-theme', theme);
+                effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             }
 
-            // Highlight selected button
+            // Always set the data attribute so Tailwind (configured with [data-theme="dark"]) works
+            html.setAttribute('data-theme', effectiveTheme);
+
+            // Highlight selected button (based on the stored preference, not resolved)
             themeBtns.forEach(btn => {
                 const isActive = btn.getAttribute('data-value') === theme;
                 btn.classList.toggle('text-main', isActive);

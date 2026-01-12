@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Personal Website of Matei Anghel - Software Engineering Student & Developer">
+    <meta name="description" content="Personal Website of Matei Anghel - Product engineer building at the intersection of AI & design.">
     <title>Matei Anghel</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
@@ -399,34 +399,121 @@
             transform: translateY(0);
         }
 
-        /* Project Card Shape Animations */
-        .group:hover .shape-circle {
-            transform: scale(1.2);
-            border-color: var(--text-main);
+        /* Project Card Styles */
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-main);
+            transition: border-color 0.3s ease, transform 0.3s ease;
         }
 
-        .group:hover .shape-orbit {
-            transform: rotate(180deg);
-            border-color: var(--text-main);
+        .project-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-4px);
         }
 
-        .group:hover .shape-cross {
-            transform: rotate(90deg) scale(1.2);
-            background-color: var(--text-main);
+        .project-card-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            opacity: 0.15;
+            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .group:hover .shape-dots {
-            transform: translateX(5px);
+        .project-card:hover .project-card-image {
+            opacity: 0.4;
+            transform: scale(1.05);
         }
 
-        .group:hover .shape-dash {
-            border-color: var(--text-main);
-            transform: rotate(-5deg);
+        .project-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                var(--bg-card) 0%,
+                var(--bg-card) 20%,
+                transparent 60%
+            );
+            transition: background 0.5s ease;
         }
 
-        /* Smooth transitions for shapes */
-        .shape-transition {
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        .project-card:hover .project-card-overlay {
+            background: linear-gradient(
+                to top,
+                var(--bg-card) 0%,
+                rgba(0,0,0,0.3) 40%,
+                transparent 70%
+            );
+        }
+
+        [data-theme="light"] .project-card:hover .project-card-overlay {
+            background: linear-gradient(
+                to top,
+                var(--bg-card) 0%,
+                rgba(255,255,255,0.5) 40%,
+                transparent 70%
+            );
+        }
+
+        .project-card-content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .project-card-content {
+                padding: 2rem;
+            }
+        }
+
+        .project-card-arrow {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--border-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translate(-8px, 8px);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover .project-card-arrow {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .project-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-card-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border: 1px solid var(--border-main);
         }
 
         /* Hero floating animation */
@@ -715,12 +802,11 @@
             <div class="hero-shape hero-shape-3"></div>
 
             <div class="space-y-6 relative z-10">
-
-
                 <p class="font-mono text-subtle text-sm reveal">01 — Introduction</p>
                 <h1 class="text-5xl md:text-8xl font-serif leading-[1.1] reveal delay-100">
-                    Software Engineering<br>
-                    Student & Developer.
+                    Building products<br>
+                    at the intersection<br>
+                    of AI & design.
                 </h1>
                 <div class="max-w-xl reveal delay-200">
                     <p class="text-muted text-lg md:text-xl font-light leading-relaxed">
@@ -794,8 +880,8 @@
                 <div class="scroller relative w-full overflow-hidden"
                     style="mask-image: linear-gradient(to right, transparent 0%, white 10%, white 90%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, white 10%, white 90%, transparent 100%);">
                     <ul
-                        class="flex w-max min-w-full shrink-0 flex-nowrap items-center justify-center animate-scroll text-subtle">
-                        <li class="flex items-center gap-10 lg:gap-16 pr-10 lg:pr-16">
+                        class="flex w-max min-w-full shrink-0 flex-nowrap items-center justify-center animate-scroll text-subtle gap-0">
+                        <li class="flex items-center gap-10 lg:gap-16 pr-10 lg:pr-16 pl-10 lg:pl-16">
                             <!-- Figma -->
                             <svg viewBox="0 0 128 128" class="h-12 w-12 fill-current">
                                 <path
@@ -846,7 +932,7 @@
 
                         </li>
                         <!-- Duplicate for seamless scroll -->
-                        <li class="flex items-center gap-10 lg:gap-16 pr-10 lg:pr-16">
+                        <li class="flex items-center gap-10 lg:gap-16 pr-10 lg:pr-16 pl-10 lg:pl-16">
                             <!-- Figma -->
                             <svg viewBox="0 0 128 128" class="h-12 w-12 fill-current">
                                 <path
@@ -969,15 +1055,20 @@
         <!-- GitHub Stats Section -->
         <section id="github-stats" class="py-24 md:py-32 px-6 md:px-24 max-w-7xl mx-auto border-t border-main">
             <div class="grid md:grid-cols-12 gap-12">
-                <div class="md:col-span-4 md:sticky md:top-32 h-fit">
+                <div class="md:col-span-4">
                     <span class="font-mono text-subtle text-sm block mb-4">04 — Open Source</span>
                     <h2 class="text-3xl font-serif italic">Contributions</h2>
+                    <p class="text-muted text-sm mt-4">Last 12 months of activity</p>
                 </div>
                 <div class="md:col-span-8 relative reveal">
-                    <div class="w-full overflow-x-auto rounded-xl border border-main bg-card p-4 md:p-8">
-                        <!-- Added specific class 'gh-chart' for manual targeting -->
-                        <img src="https://ghchart.rshah.org/409ba5/anghelmatei" alt="Matei's GitHub Contributions"
-                            class="gh-chart w-full h-auto block transition-all duration-500 min-w-[600px]" />
+                    <div class="w-full rounded-xl border border-main bg-card p-4 md:p-8">
+                        <!-- Wrapper for proper mobile scrolling -->
+                        <div class="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+                            <div id="github-chart-container">
+                                <img id="github-chart" src="https://ghchart.rshah.org/409ba5/anghelmatei" alt="Matei's GitHub Contributions"
+                                    class="gh-chart w-full h-auto block transition-all duration-500 min-w-[280px] md:min-w-[600px]" />
+                            </div>
+                        </div>
                     </div>
                     <p class="font-mono text-xs text-subtle mt-4 text-right">
                         Data from <a href="https://github.com/anghelmatei" target="_blank"
@@ -991,7 +1082,7 @@
         <section id="work" class="py-24 md:py-32 px-6 md:px-24 max-w-7xl mx-auto border-t border-main">
             <div class="mb-16 reveal">
                 <span class="font-mono text-subtle text-sm block mb-4">05 — Selected Work</span>
-                <h2 class="text-3xl font-serif italic">Recent Experiments</h2>
+                <h2 class="text-3xl font-serif italic">Selected Projects</h2>
             </div>
 
             <!-- Bento Grid (6 Items) -->
@@ -999,197 +1090,165 @@
 
                 <!-- 1. Artificial Minds (Large - Span 2) -->
                 <a href="https://artificial-minds.com" target="_blank" rel="noopener noreferrer"
-                    class="block col-span-1 lg:col-span-2">
-                    <div
-                        class="group relative mx-auto w-full overflow-hidden rounded-2xl bg-card border border-main h-full min-h-[300px] hover:border-strong transition-colors cursor-none hover-trigger">
-                        <div class="relative h-full overflow-hidden p-8 sm:p-10 flex flex-col justify-between">
-                            <!-- Abstract Visual -->
-                            <div
-                                class="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-30 transition-opacity">
-                                <div
-                                    class="w-64 h-64 border border-[var(--text-main)] rounded-full shape-circle shape-transition">
-                                </div>
-                                <div
-                                    class="w-96 h-96 border border-gray-600 rounded-full absolute shape-orbit shape-transition">
-                                </div>
+                    class="block col-span-1 lg:col-span-2 hover-trigger">
+                    <div class="project-card h-full min-h-[320px] lg:min-h-[380px]">
+                        <img src="https://placehold.co/800x600/1a1a1a/333333?text=Artificial+Minds" 
+                             alt="Artificial Minds Screenshot" 
+                             class="project-card-image"
+                             loading="lazy">
+                        <div class="project-card-overlay"></div>
+                        <div class="project-card-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-tags">
+                                <span class="project-card-tag">React</span>
+                                <span class="project-card-tag">Supabase</span>
+                                <span class="project-card-tag">AI</span>
                             </div>
-                            <div class="relative z-10 max-w-sm">
-                                <h2 class="text-2xl lg:text-3xl font-serif italic text-main mb-4">Artificial Minds</h2>
-                                <p class="text-muted font-mono text-sm leading-relaxed">
-                                    Interactive AI chat platform enabling conversations with AI clones of startup
-                                    founders.
-                                    Built with React, Supabase Edge Functions, and TanStack Query.
-                                </p>
-                            </div>
-                            <div class="relative z-10 mt-8">
-                                <span
-                                    class="font-mono text-xs border border-strong px-3 py-1 rounded-full text-[var(--tag-text)] bg-[var(--tag-bg)] backdrop-blur-md">Full
-                                    Stack AI</span>
-                            </div>
+                            <h3 class="text-2xl lg:text-3xl font-serif italic text-main mb-2">Artificial Minds</h3>
+                            <p class="text-muted text-sm leading-relaxed max-w-md">
+                                Interactive AI chat platform enabling conversations with AI clones of startup founders.
+                            </p>
                         </div>
                     </div>
                 </a>
 
                 <!-- 2. BookBuddy (Standard - Span 1) -->
                 <a href="https://github.com/anghelmatei" target="_blank" rel="noopener noreferrer"
-                    class="block col-span-1">
-                    <div
-                        class="group relative mx-auto w-full overflow-hidden rounded-2xl bg-card border border-main min-h-[300px] hover:border-strong transition-colors cursor-none hover-trigger">
-                        <div class="relative h-full overflow-hidden p-8 sm:p-10 flex flex-col justify-between">
-                            <div
-                                class="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-30 transition-opacity">
-                                <!-- Book/Pages visual -->
-                                <div
-                                    class="w-24 h-32 border border-[var(--text-main)] shape-transition group-hover:rotate-6">
-                                </div>
-                                <div
-                                    class="w-20 h-28 border border-[var(--text-main)]/70 shape-transition group-hover:-rotate-6 absolute">
-                                </div>
+                    class="block col-span-1 hover-trigger">
+                    <div class="project-card h-full min-h-[320px]">
+                        <img src="https://placehold.co/600x600/1a1a1a/333333?text=BookBuddy" 
+                             alt="BookBuddy Screenshot" 
+                             class="project-card-image"
+                             loading="lazy">
+                        <div class="project-card-overlay"></div>
+                        <div class="project-card-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-tags">
+                                <span class="project-card-tag">Gemini</span>
+                                <span class="project-card-tag">Firebase</span>
                             </div>
-                            <div class="relative z-10">
-                                <h2 class="text-2xl lg:text-3xl font-serif italic text-main mb-4">BookBuddy</h2>
-                                <p class="text-muted font-mono text-sm leading-relaxed">
-                                    Goodreads recommendation system with a TikTok-style discovery feed. Won 1st place at
-                                    Google Students AI Hackathon.
-                                </p>
-                            </div>
-                            <div class="relative z-10 mt-8">
-                                <span
-                                    class="font-mono text-xs border border-strong px-3 py-1 rounded-full text-[var(--tag-text)] bg-[var(--tag-bg)] backdrop-blur-md">Gemini
-                                    / Firebase</span>
-                            </div>
+                            <h3 class="text-2xl lg:text-3xl font-serif italic text-main mb-2">BookBuddy</h3>
+                            <p class="text-muted text-sm leading-relaxed">
+                                Goodreads recommendation system with a TikTok-style discovery feed.
+                            </p>
                         </div>
                     </div>
                 </a>
 
                 <!-- 3. Mira (Standard - Span 1) -->
                 <a href="https://github.com/anghelmatei/Mira-AI-Marketing-OS/" target="_blank" rel="noopener noreferrer"
-                    class="block col-span-1">
-                    <div
-                        class="group relative mx-auto w-full overflow-hidden rounded-2xl bg-card border border-main min-h-[300px] hover:border-strong transition-colors cursor-none hover-trigger">
-                        <div class="relative h-full overflow-hidden p-8 sm:p-10 flex flex-col justify-between">
-                            <div
-                                class="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-30 transition-opacity">
-                                <!-- Visual Decoration -->
-                                <div
-                                    class="w-20 h-20 border border-dashed border-[var(--text-main)] rotate-45 shape-transition group-hover:rotate-90">
-                                </div>
+                    class="block col-span-1 hover-trigger">
+                    <div class="project-card h-full min-h-[320px]">
+                        <img src="https://placehold.co/600x600/1a1a1a/333333?text=Mira" 
+                             alt="Mira Screenshot" 
+                             class="project-card-image"
+                             loading="lazy">
+                        <div class="project-card-overlay"></div>
+                        <div class="project-card-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-tags">
+                                <span class="project-card-tag">React</span>
+                                <span class="project-card-tag">AI</span>
                             </div>
-
-                            <div class="relative z-10">
-                                <h2 class="text-2xl lg:text-3xl font-serif italic text-main mb-4">Mira</h2>
-                                <p class="text-muted font-mono text-sm leading-relaxed">
-                                    AI marketing platform with virtual try-on and ad creative generation. Implemented
-                                    image
-                                    processing pipelines.
-                                </p>
-                            </div>
-                            <div class="relative z-10 mt-8">
-                                <span
-                                    class="font-mono text-xs border border-strong px-3 py-1 rounded-full text-[var(--tag-text)] bg-[var(--tag-bg)] backdrop-blur-md">React
-                                    / AI</span>
-                            </div>
+                            <h3 class="text-2xl lg:text-3xl font-serif italic text-main mb-2">Mira</h3>
+                            <p class="text-muted text-sm leading-relaxed">
+                                AI marketing platform with virtual try-on and ad creative generation.
+                            </p>
                         </div>
                     </div>
                 </a>
 
-                <!-- 4. Scio (Large - Span 2) -->
-                <a href="https://github.com/anghelmatei/Scio-Robot-Tutor" target="_blank" rel="noopener noreferrer"
-                    class="block col-span-1 lg:col-span-2">
-                    <div
-                        class="group relative mx-auto w-full overflow-hidden rounded-2xl bg-card border border-main min-h-[300px] hover:border-strong transition-colors cursor-none hover-trigger">
-                        <div class="relative h-full overflow-hidden p-8 sm:p-10 flex flex-col justify-between">
-                            <div
-                                class="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-30 transition-opacity">
-                                <div
-                                    class="w-full h-[1px] bg-white rotate-12 shape-cross shape-transition absolute top-1/2">
-                                </div>
-                                <div
-                                    class="w-32 h-32 border border-[var(--text-main)] rounded-full absolute shape-circle shape-transition">
-                                </div>
+                <!-- 4. Notto (Large - Span 2) -->
+                <a href="https://usenotto.com" target="_blank" rel="noopener noreferrer"
+                    class="block col-span-1 lg:col-span-2 hover-trigger">
+                    <div class="project-card h-full min-h-[320px] lg:min-h-[380px]">
+                        <img src="https://placehold.co/800x600/1a1a1a/333333?text=Notto" 
+                             alt="Notto Screenshot" 
+                             class="project-card-image"
+                             loading="lazy">
+                        <div class="project-card-overlay"></div>
+                        <div class="project-card-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-tags">
+                                <span class="project-card-tag">Electron</span>
+                                <span class="project-card-tag">AI</span>
                             </div>
-
-                            <div class="relative z-10 max-w-lg">
-                                <h2 class="text-2xl lg:text-3xl font-serif italic text-main mb-4">Scio</h2>
-                                <p class="text-muted font-mono text-sm leading-relaxed">
-                                    AI-powered robot built with OpenCV, Raspberry PI, and GPT-4. Won 1st place at UPB
-                                    research competition and $3K grant.
-                                </p>
-                            </div>
-                            <div class="relative z-10 mt-8">
-                                <span
-                                    class="font-mono text-xs border border-strong px-3 py-1 rounded-full text-[var(--tag-text)] bg-[var(--tag-bg)] backdrop-blur-md">Robotics
-                                    / GPT-4</span>
-                            </div>
+                            <h3 class="text-2xl lg:text-3xl font-serif italic text-main mb-2">Notto</h3>
+                            <p class="text-muted text-sm leading-relaxed max-w-md">
+                                AI desktop agent with AI notetaking, dictation and invisible chat overlay.
+                            </p>
                         </div>
                     </div>
                 </a>
 
                 <!-- 5. Fintrix (Large - Span 2) -->
                 <a href="https://fintrix.ro" target="_blank" rel="noopener noreferrer"
-                    class="block col-span-1 lg:col-span-2">
-                    <div
-                        class="group relative mx-auto w-full overflow-hidden rounded-2xl bg-card border border-main min-h-[300px] hover:border-strong transition-colors cursor-none hover-trigger">
-                        <div class="relative h-full overflow-hidden p-8 sm:p-10 flex flex-col justify-between">
-                            <div
-                                class="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-30 transition-opacity">
-                                <!-- Rotating circles -->
-                                <div
-                                    class="w-48 h-48 border-2 border-[var(--text-main)] rounded-full shape-circle shape-transition">
-                                </div>
-                                <div
-                                    class="w-32 h-32 border-2 border-[var(--text-main)]/70 rounded-full absolute shape-orbit shape-transition">
-                                </div>
-                                <div
-                                    class="w-16 h-16 border-2 border-[var(--text-main)]/50 rounded-full absolute shape-transition group-hover:scale-150">
-                                </div>
+                    class="block col-span-1 lg:col-span-2 hover-trigger">
+                    <div class="project-card h-full min-h-[320px] lg:min-h-[380px]">
+                        <img src="https://placehold.co/800x600/1a1a1a/333333?text=Fintrix" 
+                             alt="Fintrix Screenshot" 
+                             class="project-card-image"
+                             loading="lazy">
+                        <div class="project-card-overlay"></div>
+                        <div class="project-card-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-tags">
+                                <span class="project-card-tag">JS</span>
+                                <span class="project-card-tag">HTML</span>
+                                <span class="project-card-tag">CSS</span>
+                                <span class="project-card-tag">WIP</span>
                             </div>
-                            <div class="relative z-10">
-                                <h2 class="text-2xl lg:text-3xl font-serif italic text-main mb-4">Fintrix - Work In
-                                    Progress
-                                </h2>
-                                <p class="text-muted font-mono text-sm leading-relaxed">
-                                    Stock analysis platform for the Romanian market.
-                                </p>
-                            </div>
-                            <div class="relative z-10 mt-8">
-                                <span
-                                    class="font-mono text-xs border border-strong px-3 py-1 rounded-full text-[var(--tag-text)] bg-[var(--tag-bg)] backdrop-blur-md">JS
-                                    /
-                                    HTML / CSS</span>
-                            </div>
+                            <h3 class="text-2xl lg:text-3xl font-serif italic text-main mb-2">Fintrix</h3>
+                            <p class="text-muted text-sm leading-relaxed max-w-md">
+                                Stock analysis platform for the Romanian market.
+                            </p>
                         </div>
                     </div>
                 </a>
 
-                <!-- 6. Notto (Standard - Span 1) -->
-                <a href="https://usenotto.com" target="_blank" rel="noopener noreferrer" class="block col-span-1">
-                    <div
-                        class="group relative mx-auto w-full overflow-hidden rounded-2xl bg-card border border-main min-h-[300px] hover:border-strong transition-colors cursor-none hover-trigger">
-                        <div class="relative h-full overflow-hidden p-8 sm:p-10 flex flex-col justify-between">
-                            <div
-                                class="absolute inset-0 flex items-center justify-center opacity-10 group-hover:opacity-30 transition-opacity">
-                                <!-- Overlay/Window visual -->
-                                <div
-                                    class="w-32 h-32 border border-[var(--text-main)] shape-transition group-hover:scale-110">
-                                </div>
-                                <div
-                                    class="w-24 h-24 border border-[var(--text-main)]/60 shape-transition group-hover:scale-105 absolute">
-                                </div>
+                <!-- 6. Scio (Standard - Span 1) -->
+                <a href="https://github.com/anghelmatei/Scio-Robot-Tutor" target="_blank" rel="noopener noreferrer"
+                    class="block col-span-1 hover-trigger">
+                    <div class="project-card h-full min-h-[320px]">
+                        <img src="https://placehold.co/600x600/1a1a1a/333333?text=Scio" 
+                             alt="Scio Screenshot" 
+                             class="project-card-image"
+                             loading="lazy">
+                        <div class="project-card-overlay"></div>
+                        <div class="project-card-arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 17L17 7"/><path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-tags">
+                                <span class="project-card-tag">Robotics</span>
+                                <span class="project-card-tag">GPT-4</span>
                             </div>
-                            <div class="relative z-10">
-                                <h2 class="text-2xl lg:text-3xl font-serif italic text-main mb-4">Notto - Work In
-                                    Progress
-                                </h2>
-                                <p class="text-muted font-mono text-sm leading-relaxed">
-                                    AI desktop agent with AI notetaking, dictation and invisible chat overlay.
-                                </p>
-                            </div>
-                            <div class="relative z-10 mt-8">
-                                <span
-                                    class="font-mono text-xs border border-strong px-3 py-1 rounded-full text-[var(--tag-text)] bg-[var(--tag-bg)] backdrop-blur-md">Electron
-                                    / AI</span>
-                            </div>
+                            <h3 class="text-2xl lg:text-3xl font-serif italic text-main mb-2">Scio</h3>
+                            <p class="text-muted text-sm leading-relaxed">
+                                AI-powered robot that teaches English to kids using GPT-4 and computer vision.
+                            </p>
                         </div>
                     </div>
                 </a>
